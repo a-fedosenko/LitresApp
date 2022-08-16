@@ -1,4 +1,4 @@
-# Litres API for Audio catalag
+# Litres API for Audio catalog
 
 ## Project structure:
 

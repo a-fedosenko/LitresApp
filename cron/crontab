@@ -1,0 +1,3 @@
+# min    hour     day      month    weekday    command
+*/30        *        *        *        *          echo "\nGetting updates for catalog...\n" 
+*/30        *        *        *        *          curl api/get_updates 

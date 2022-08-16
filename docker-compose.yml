@@ -1,0 +1,55 @@
+version: "3"  
+services:
+  litres-api:
+    container_name: litres-api
+    build: ./api
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./api:/var/www/html/
+      - ./downloads:/downloads/
+      - /var/www/html/vendor/
+    links:
+      - litres-redis:redis
+    depends_on:
+      - litres-redis
+    environment:
+      - MYSQL_ROOT_PASSWORD=litres
+    networks:
+      - litres
+  litres-cron:
+    container_name: litres-cron
+    build: 
+      context: ./cron
+    volumes:
+      - ./cron/crontab:/etc/crontabs/root
+    restart: always
+    links: 
+      - litres-api:api
+    networks:
+      - litres
+  litres-redis:
+    image: redislabs/redisearch:latest
+    container_name: litres-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - litres
+
+
+
+
+#  litres-db:
+#    container_name: litres-db
+#    image: mariadb:10.4
+#    restart: always
+#    volumes:
+#      - ./userdata/data:/var/lib/mysql
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=litres
+#    networks:
+#      - litres
+networks:
+  litres:
+  

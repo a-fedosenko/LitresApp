@@ -1,0 +1,43 @@
+php_value max_execution_time 36586400
+php_value post_max_size 1000M
+php_value upload_max_filesize 1000M
+php_value memory_limit 4000M
+DirectoryIndex home.html home.php
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Switch to HTTPS if on secured domain (set by SSL_DOMAIN env.var)
+# Note: it not allowed to use vars on right part of expression
+RewriteCond %{HTTPS} !=on 
+RewriteCond %{HTTP_HOST}#%{ENV:SSL_DOMAIN} ^([^#]+)#\1$ [NC]
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} 
+
+#Accept nested url with api
+RewriteCond %{REQUEST_URI} \/api\/(.+)\/(.+)
+RewriteRule ^api api.php
+
+# Remove trailing .php froom query string
+RewriteCond %{QUERY_STRING} \.php$
+RewriteRule (.+)\.php $1
+
+# Remove trailing .php from POST file name 
+RewriteCond %{REQUEST_METHOD} POST
+RewriteCond %{REQUEST_FILENAME} \.php$
+RewriteRule (.+)\.php $1 
+
+# Unless directory, remove trailing slash
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{HTTPS}s ^on(s)|
+RewriteRule ^([^/]+)/$ http%1://%{HTTP_HOST}/$1 [R=301,L]
+
+# Redirect external .php requests to extensionless URL
+RewriteCond %{THE_REQUEST} ^(.+)\.php([#?][^\ ]*)?\ HTTP/
+RewriteCond %{HTTPS}s ^on(s)|
+RewriteRule ^(.+)\.php$ http%1://%{HTTP_HOST}/$1 [R=301,L]
+
+
+# Resolve .php file for extensionless PHP URLs
+RewriteRule ^([^/.]+)$ $1.php [L]
+
+</IfModule>

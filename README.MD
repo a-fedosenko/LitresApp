@@ -17,13 +17,15 @@ Project includes three containers:
     docker-compose up -d
     ```
 3. Download Audio catalog:
-    http://localhost/get_updates
+
+    `http://localhost/get_updates`
 
 ## To test search in titles function:
 
 In the browser, search for any string you want to find in titles, for example:
-    http://localhost/api/v0/audio/titles/search/Второе нашествие
 
+    `http://localhost/api/v0/audio/titles/search/Второе нашествие`
+    
 ## Currently vailable APIs: 
 
     GET /api/v0/hello 
